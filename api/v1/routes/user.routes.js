@@ -5,7 +5,7 @@ const Middleware = require('../middlewares/middleware');
 router
     .route("/")
         .get(Middleware.isAuthenticated,UserController.getAllUsers)
-        .post(awsStorage.uploadFileToS3.single("image"),UserController.createUserProfile)
+        .post(awsStorage.uploadToFolder("User_Profiles").single("image"),UserController.createUserProfile)
 
 
 router.route("/requestPasswordReset")
@@ -18,7 +18,7 @@ router
     .route("/:id")
         .all(Middleware.isAuthenticated, Middleware.isUserOrSuperAdmin)
         .get(UserController.getUserProfile)
-        .patch(awsStorage.uploadFileToS3.single("image"),UserController.updateUserProfile)
+        .patch(awsStorage.uploadToFolder("User_Profiles").single("image"),UserController.updateUserProfile)
         .delete(UserController.deleteUserProfile)
     
 module.exports = router;
