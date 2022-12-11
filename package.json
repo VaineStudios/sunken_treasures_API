@@ -1,0 +1,38 @@
+{
+  "name": "mongo_express_api",
+  "version": "1.0.0",
+  "description": "Tested template for easy use when creating API's",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "debug": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VaineStudios/MONGO_EXPRESS_API.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VaineStudios/MONGO_EXPRESS_API/issues"
+  },
+  "homepage": "https://github.com/VaineStudios/MONGO_EXPRESS_API#readme",
+  "dependencies": {
+    "aws-sdk": "^2.1233.0",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "handlebars": "^4.7.7",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.6.5",
+    "multer": "^1.4.5-lts.1",
+    "multer-s3": "^2.10.0",
+    "nodemailer": "^6.8.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.20"
+  }
+}
