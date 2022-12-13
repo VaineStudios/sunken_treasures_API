@@ -12,6 +12,13 @@ const {AMZ_BUCKET_NAME, AMZ_ACCESS_KEY, AMZ_SECRET_KEY, AMZ_BUCKET_REGION} = pro
 
 class AWSStorage{
 
+    ACCEPTED_FILE_TYPE = [
+        "image/png",
+        "image/jpg",
+        "image/jpeg",
+        "image/webp",
+    ];
+
     s3 = {}    
     uploadFileToS3 = {};
     
@@ -58,14 +65,28 @@ class AWSStorage{
             })
         })
     }
+
+    fileFilter = (req, file, cb) => {
+        if (this.ACCEPTED_FILE_TYPE.includes(file.mimeType)) {
+            cb(null, true)
+        } else {
+            cb(null, false);
+            return cb(new Error("File type is not supported"))
+
+        }
+    }
     uploadToFolder = (foldername)=>{
         return multer({
+            // fileFilter: this.fileFilter,
             storage: multerS3({
                 s3:this.s3,
                 bucket:this._bucketName,
+                
                 metadata:(req, file, cb)=>{
+                    
                     cb(null, {fieldName:file.fieldname})
                 }, 
+                
                 key:(req, file, cb)=>{
                     cb(null, foldername+"/"+Date.now().toString()+"-"+file.originalname);
                 }
@@ -83,21 +104,23 @@ class AWSStorage{
      */
     deleteObjectFromS3 = async (location)=>{
         if(!location) return Promise.reject(new Error("No location was specified"))
-        let objectName = location.split('/').slice(-1)[0];
-        
+        let objectName = location.split("/").slice(-2).join("/");
+        // location will be a enconded url so we decode it since we the key isn't encoded.
+        objectName = decodeURIComponent(objectName)
+
         const params = {
-            Bucket : bucketName,
+            Bucket : this._bucketName,
             Key: objectName,
         }
         try{
             // checks to see if there is any errors with the file metadata.
-            await s3.headObject(params).promise();
+            await this.s3.headObject(params).promise();
 
-            await s3.deleteObject(params).promise();
+            await this.s3.deleteObject(params).promise();
             return Promise.resolve("Object successfully deleted");
 
         }catch(error){
-            return Promise.reject(new Error("File not found Error : " + error.code));
+            return Promise.reject(new Error("File not found Error : " + error));
         }
     }
 }
